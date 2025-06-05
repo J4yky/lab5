@@ -4,18 +4,25 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.lab_5.R
+import android.util.Log
+import android.widget.Toast
 import com.example.lab_5.databinding.ActivityMainBinding
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
 
+    private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d(TAG, "onCreate() - MainActivity")
+        Toast.makeText(this, "Main: onCreate()", Toast.LENGTH_SHORT).show()
 
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
@@ -24,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         updateSwitchText(isNightMode)
 
         binding.switch1.setOnCheckedChangeListener { _, isChecked ->
-            sharedPreferences.edit().putBoolean("night_mode", isChecked).apply()
+            sharedPreferences.edit() { putBoolean("night_mode", isChecked) }
 
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -70,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                     binding.textView2.text = "BMI: $roundedBMI"
                     binding.imageView.setImageResource(R.drawable.halt)
                 }
-                else -> { // bmi >= 29.9
+                else -> {
                     binding.textView.text = "Otyłość"
                     binding.textView2.text = "BMI: $roundedBMI"
                     binding.imageView.setImageResource(R.drawable.skull)
@@ -82,4 +89,34 @@ class MainActivity : AppCompatActivity() {
     private fun updateSwitchText(isNightMode: Boolean) {
         binding.switch1.text = if (isNightMode) "Tryb Dzienny" else "Tryb Nocny"
     }
+
+    /*override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart() - MainActivity")
+        Toast.makeText(this, "Main: onStart()", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume() - MainActivity")
+        Toast.makeText(this, "Main: onResume()", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause() - MainActivity")
+        Toast.makeText(this, "Main: onPause()", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop() - MainActivity")
+        Toast.makeText(this, "Main: onStop()", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy() - MainActivity")
+        Toast.makeText(this, "Main: onDestroy()", Toast.LENGTH_SHORT).show()
+    }*/
 }
